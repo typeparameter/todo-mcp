@@ -1,0 +1,18 @@
+# Build output
+build
+
+# Repo support
+.eslintcache
+.turbo
+node_modules
+
+# Local state
+.env*
+*.tsbuildinfo
+
+# Editors
+.idea
+*.iml
+
+# Misc
+.DS_Store

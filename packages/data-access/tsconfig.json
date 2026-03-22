@@ -1,0 +1,3 @@
+{
+  "extends": "@typeparameter/todo-mcp-conventions/tsconfig/base"
+}

@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json.schemastore.org/prettierrc",
+  "plugins": ["@ianvs/prettier-plugin-sort-imports"],
+  "importOrder": ["<THIRD_PARTY_MODULES>", "", "^@typeparameter/todo-mcp", "", "^~/", "^[.]"],
+  "importOrderTypeScriptVersion": "5.9.3",
+  "printWidth": 120,
+  "trailingComma": "all"
+}

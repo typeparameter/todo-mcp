@@ -1,0 +1,18 @@
+{
+  "name": "@typeparameter/todo-mcp-conventions",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./eslint/base": "./eslint/base.js",
+    "./tsconfig/base": "./tsconfig/base.json"
+  },
+  "scripts": {
+    "lint": "tsc && eslint --config eslint/base.js --cache --max-warnings=0 .",
+    "lint:fix": "tsc && eslint --config eslint/base.js --cache --max-warnings=0 --fix ."
+  },
+  "dependencies": {
+    "@eslint/js": "^9.39.3",
+    "eslint-config-prettier": "^10.1.8",
+    "typescript-eslint": "^8.56.0"
+  }
+}

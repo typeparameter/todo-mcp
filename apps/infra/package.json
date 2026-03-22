@@ -1,0 +1,19 @@
+{
+  "name": "@typeparameter/todo-mcp-infra",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "cdk synth --quiet",
+    "deploy": "cdk deploy",
+    "deploy:hotswap": "cdk deploy --hotswap-fallback",
+    "lint": "tsc && eslint --cache --max-warnings=0 .",
+    "lint:fix": "tsc && eslint --cache --max-warnings=0 --fix ."
+  },
+  "devDependencies": {
+    "@typeparameter/todo-mcp-conventions": "workspace:*",
+    "@typeparameter/todo-mcp-server": "workspace:*",
+    "aws-cdk": "^2.1112.0",
+    "aws-cdk-lib": "^2.244.0",
+    "constructs": "^10.5.1"
+  }
+}

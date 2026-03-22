@@ -1,0 +1,13 @@
+{
+  "name": "@typeparameter/todo-mcp-models",
+  "private": true,
+  "type": "module",
+  "exports": "./index.ts",
+  "scripts": {
+    "lint": "tsc && eslint --cache --max-warnings=0 .",
+    "lint:fix": "tsc && eslint --cache --max-warnings=0 --fix ."
+  },
+  "devDependencies": {
+    "@typeparameter/todo-mcp-conventions": "workspace:*"
+  }
+}

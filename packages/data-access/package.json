@@ -1,0 +1,18 @@
+{
+  "name": "@typeparameter/todo-mcp-data-access",
+  "private": true,
+  "type": "module",
+  "exports": "./index.ts",
+  "scripts": {
+    "lint": "tsc && eslint --cache --max-warnings=0 .",
+    "lint:fix": "tsc && eslint --cache --max-warnings=0 --fix ."
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1013.0",
+    "@aws-sdk/lib-dynamodb": "^3.1013.0",
+    "@typeparameter/todo-mcp-models": "workspace:*"
+  },
+  "devDependencies": {
+    "@typeparameter/todo-mcp-conventions": "workspace:*"
+  }
+}
