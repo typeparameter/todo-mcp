@@ -35,6 +35,11 @@ export class TodoMcpServer extends McpServer {
         description: "List out the todos for the current user",
         inputSchema: ListTodosInputSchema,
         outputSchema: ListTodosOutputSchema,
+        annotations: {
+          readOnlyHint: true,
+          destructiveHint: false,
+          idempotentHint: true,
+        },
       },
       async (input) => {
         const userId = this.authService.getUserId();
@@ -49,6 +54,11 @@ export class TodoMcpServer extends McpServer {
         description: "Create a new todo item",
         inputSchema: CreateTodoInputSchema,
         outputSchema: CreateTodoOutputSchema,
+        annotations: {
+          readOnlyHint: false,
+          destructiveHint: false,
+          idempotentHint: false,
+        },
       },
       async (input) => {
         const userId = this.authService.getUserId();
@@ -64,6 +74,11 @@ export class TodoMcpServer extends McpServer {
         description: "Update an existing todo item",
         inputSchema: UpdateTodoInputSchema,
         outputSchema: UpdateTodoOutputSchema,
+        annotations: {
+          readOnlyHint: false,
+          destructiveHint: true,
+          idempotentHint: false,
+        },
       },
       async (input) => {
         const userId = this.authService.getUserId();
@@ -79,6 +94,11 @@ export class TodoMcpServer extends McpServer {
         description: "Delete an existing todo item",
         inputSchema: DeleteTodoInputSchema,
         outputSchema: DeleteTodoOutputSchema,
+        annotations: {
+          readOnlyHint: false,
+          destructiveHint: true,
+          idempotentHint: false,
+        },
       },
       async (input) => {
         const userId = this.authService.getUserId();
