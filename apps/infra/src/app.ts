@@ -23,6 +23,20 @@ const todosTable = new dynamodb.Table(stack, "TodosTable", {
   writeCapacity: 5,
 });
 
+todosTable.addGlobalSecondaryIndex({
+  indexName: "UserIdStatusIndex",
+  partitionKey: {
+    name: "UserId",
+    type: dynamodb.AttributeType.STRING,
+  },
+  sortKey: {
+    name: "Status",
+    type: dynamodb.AttributeType.STRING,
+  },
+  readCapacity: 5,
+  writeCapacity: 5,
+});
+
 const mcpServerLambda = new lambda.Function(stack, "McpServerLambda", {
   code: lambda.Code.fromAsset(getDependencyPath("@typeparameter/todo-mcp-server/handler")),
   handler: "index.handler",

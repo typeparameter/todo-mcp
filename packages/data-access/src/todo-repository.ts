@@ -1,6 +1,14 @@
 import { randomUUID } from "node:crypto";
 import { ConditionalCheckFailedException, DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DeleteCommand, DynamoDBDocumentClient, paginateQuery, PutCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import {
+  DeleteCommand,
+  DynamoDBDocumentClient,
+  paginateQuery,
+  PutCommand,
+  UpdateCommand,
+  type QueryCommandInput,
+  type UpdateCommandInput,
+} from "@aws-sdk/lib-dynamodb";
 
 import {
   TodoSchema,
@@ -8,6 +16,7 @@ import {
   type CreateTodoOutput,
   type DeleteTodoInput,
   type DeleteTodoOutput,
+  type ListTodosInput,
   type ListTodosOutput,
   type UpdateTodoInput,
   type UpdateTodoOutput,
@@ -20,6 +29,8 @@ interface TodoRepositoryConfig {
 }
 
 export class TodoRepository {
+  private readonly statusIndexName = "UserIdStatusIndex";
+
   private readonly tableName: string;
   private readonly documentClient: DynamoDBDocumentClient;
 
@@ -28,16 +39,22 @@ export class TodoRepository {
     this.documentClient = DynamoDBDocumentClient.from(new DynamoDBClient({}));
   }
 
-  async listTodos(userId: string): Promise<ListTodosOutput> {
+  async listTodos(userId: string, input: ListTodosInput): Promise<ListTodosOutput> {
+    const { show_all } = input;
     const items: Record<string, unknown>[] = [];
 
-    const queryInput = {
+    const queryInput: QueryCommandInput = {
       TableName: this.tableName,
       KeyConditionExpression: "UserId = :userId",
-      ExpressionAttributeValues: {
-        ":userId": userId,
-      },
+      ExpressionAttributeValues: { ":userId": userId },
     };
+
+    if (!show_all) {
+      queryInput.IndexName = this.statusIndexName;
+      queryInput.KeyConditionExpression = "UserId = :userId AND #status = :status";
+      queryInput.ExpressionAttributeNames = { "#status": "Status" };
+      queryInput.ExpressionAttributeValues = { ":userId": userId, ":status": "open" };
+    }
 
     try {
       const paginator = paginateQuery({ client: this.documentClient }, queryInput);
@@ -51,6 +68,7 @@ export class TodoRepository {
         TodoSchema.parse({
           id: item["TodoId"],
           content: item["Content"],
+          status: item["Status"],
           created_at: item["CreatedAt"],
           updated_at: item["UpdatedAt"],
         }),
@@ -59,7 +77,7 @@ export class TodoRepository {
   }
 
   async createTodo(userId: string, input: CreateTodoInput): Promise<CreateTodoOutput> {
-    const { content } = input;
+    const { content, status } = input;
 
     const id = randomUUID();
     const timestamp = new Date().toISOString();
@@ -67,6 +85,7 @@ export class TodoRepository {
       UserId: userId,
       TodoId: id,
       Content: content,
+      Status: status,
       CreatedAt: timestamp,
       UpdatedAt: timestamp,
     };
@@ -91,24 +110,36 @@ export class TodoRepository {
   }
 
   async updateTodo(userId: string, input: UpdateTodoInput): Promise<UpdateTodoOutput> {
-    const { id, content } = input;
+    const { id, content, status } = input;
+
+    const expressionAttributeNames: Record<string, string> = {};
+
+    const expressionAttributeValues: Record<string, string> = {
+      ":updatedAt": new Date().toISOString(),
+    };
+
+    const updateInput: UpdateCommandInput = {
+      TableName: this.tableName,
+      Key: { UserId: userId, TodoId: id },
+      ConditionExpression: "attribute_exists(UserId) AND attribute_exists(TodoId)",
+      UpdateExpression: "SET UpdatedAt = :updatedAt",
+      ExpressionAttributeNames: expressionAttributeNames,
+      ExpressionAttributeValues: expressionAttributeValues,
+    };
+
+    if (content !== undefined) {
+      updateInput.UpdateExpression += ", Content = :content";
+      expressionAttributeValues[":content"] = content;
+    }
+
+    if (status !== undefined) {
+      updateInput.UpdateExpression += ", #status = :status";
+      expressionAttributeNames["#status"] = "Status";
+      expressionAttributeValues[":status"] = status;
+    }
 
     try {
-      await this.documentClient.send(
-        new UpdateCommand({
-          TableName: this.tableName,
-          Key: {
-            UserId: userId,
-            TodoId: id,
-          },
-          UpdateExpression: "SET Content = :content, UpdatedAt = :updatedAt",
-          ConditionExpression: "attribute_exists(UserId) AND attribute_exists(TodoId)",
-          ExpressionAttributeValues: {
-            ":content": content,
-            ":updatedAt": new Date().toISOString(),
-          },
-        }),
-      );
+      await this.documentClient.send(new UpdateCommand(updateInput));
     } catch (error) {
       if (error instanceof ConditionalCheckFailedException) {
         throw new ItemNotFoundError(`Todo ${id} does not exist for user ${userId}`, { cause: error });
@@ -127,10 +158,7 @@ export class TodoRepository {
       await this.documentClient.send(
         new DeleteCommand({
           TableName: this.tableName,
-          Key: {
-            UserId: userId,
-            TodoId: id,
-          },
+          Key: { UserId: userId, TodoId: id },
           ConditionExpression: "attribute_exists(UserId) AND attribute_exists(TodoId)",
         }),
       );

@@ -36,9 +36,9 @@ export class TodoMcpServer extends McpServer {
         inputSchema: ListTodosInputSchema,
         outputSchema: ListTodosOutputSchema,
       },
-      async () => {
+      async (input) => {
         const userId = this.authService.getUserId();
-        const { todos } = await this.todoRepository.listTodos(userId);
+        const { todos } = await this.todoRepository.listTodos(userId, input);
         return buildResult({ todos });
       },
     );
