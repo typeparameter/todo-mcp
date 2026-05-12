@@ -12,8 +12,8 @@
   "devDependencies": {
     "@typeparameter/todo-mcp-conventions": "workspace:*",
     "@typeparameter/todo-mcp-server": "workspace:*",
-    "aws-cdk": "^2.1112.0",
-    "aws-cdk-lib": "^2.244.0",
-    "constructs": "^10.5.1"
+    "aws-cdk": "^2.1121.0",
+    "aws-cdk-lib": "^2.253.1",
+    "constructs": "^10.6.0"
   }
 }
