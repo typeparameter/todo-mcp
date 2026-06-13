@@ -20,6 +20,6 @@
   "devDependencies": {
     "@typeparameter/todo-mcp-conventions": "workspace:*",
     "@types/aws-lambda": "^8.10.161",
-    "esbuild": "^0.28.0"
+    "esbuild": "^0.28.1"
   }
 }
