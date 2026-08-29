@@ -11,8 +11,8 @@
     "lint:fix": "tsc && eslint --config eslint/base.js --cache --max-warnings=0 --fix ."
   },
   "dependencies": {
-    "@eslint/js": "^9.39.4",
+    "@eslint/js": "^9.39.5",
     "eslint-config-prettier": "^10.1.8",
-    "typescript-eslint": "^8.59.3"
+    "typescript-eslint": "^8.68.0"
   }
 }

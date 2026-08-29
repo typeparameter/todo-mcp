@@ -8,8 +8,8 @@
     "lint:fix": "tsc && eslint --cache --max-warnings=0 --fix ."
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.1045.0",
-    "@aws-sdk/lib-dynamodb": "^3.1045.0",
+    "@aws-sdk/client-dynamodb": "^3.1121.0",
+    "@aws-sdk/lib-dynamodb": "^3.1121.0",
     "@typeparameter/todo-mcp-models": "workspace:*"
   },
   "devDependencies": {

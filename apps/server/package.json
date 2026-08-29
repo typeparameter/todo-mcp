@@ -12,14 +12,14 @@
     "lint:fix": "tsc && eslint --cache --max-warnings=0 --fix ."
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@modelcontextprotocol/sdk": "^1.30.0",
     "@typeparameter/todo-mcp-data-access": "workspace:*",
     "@typeparameter/todo-mcp-models": "workspace:*",
     "serverless-http": "^4.0.0"
   },
   "devDependencies": {
     "@typeparameter/todo-mcp-conventions": "workspace:*",
-    "@types/aws-lambda": "^8.10.161",
-    "esbuild": "^0.28.1"
+    "@types/aws-lambda": "^8.10.162",
+    "esbuild": "^0.28.2"
   }
 }
